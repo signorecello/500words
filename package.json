@@ -1,0 +1,45 @@
+{
+	"name": "client",
+	"version": "0.1.0",
+	"private": true,
+	"dependencies": {
+		"@eosrio/hyperion-stream-client": "^0.3.6",
+		"@scatterjs/core": "^2.7.53",
+		"@scatterjs/eosjs2": "^1.5.35",
+		"antd": "^3.13.5",
+		"axios": "^0.19.2",
+		"eosjs": "^20.0.0",
+		"momentjs": "^2.0.0",
+		"murmurhash-js": "^1.0.0",
+		"react": "^16.8.2",
+		"react-dom": "^16.8.2",
+		"react-redux": "^6.0.0",
+		"react-router-dom": "^4.3.1",
+		"react-scripts": "2.1.5",
+		"recoil": "0.0.8",
+		"redux": "^4.0.1",
+		"redux-saga": "^1.0.1",
+		"scatterjs-core": "^2.7.9",
+		"semantic-ui-css": "^2.4.1",
+		"semantic-ui-react": "^0.85.0"
+	},
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject"
+	},
+	"eslintConfig": {
+		"extends": "react-app"
+	},
+	"browserslist": [
+		">0.2%",
+		"not dead",
+		"not ie <= 11",
+		"not op_mini all"
+	],
+	"devDependencies": {
+		"@babel/runtime": "^7.3.1",
+		"redux-devtools-extension": "^2.13.8"
+	}
+}

@@ -1,0 +1,11 @@
+ON THE SC
+- Create a new function with the rules
+- Add the function on the "post" section regarding the challenges
+- Add the new challenge to the std::vector
+- Upload the new contract
+- Call the update action
+
+ON THE FRONTEND
+- Add the image data (card and thumbnail)
+- Add the description
+- Update the "post" action if any other data is needed
