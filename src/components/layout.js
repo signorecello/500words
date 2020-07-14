@@ -6,7 +6,7 @@ import { useRecoilState } from "recoil";
 import moment from "moment";
 
 const HyperionSocketClient = require('@eosrio/hyperion-stream-client').default;
-const client = new HyperionSocketClient(process.env.REACT_APP_TLOS_HTTP_ENDPOINT, {async: true});
+const client = new HyperionSocketClient(`${process.env.REACT_APP_PROTOCOL}://${process.env.REACT_APP_TLOS_HTTP_ENDPOINT}`, {async: true});
 
 
 export default function Layout(props) {

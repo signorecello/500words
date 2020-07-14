@@ -1,5 +1,7 @@
 # 500words
 
+Try the working website at https://fivehundredw.herokuapp.com/ !
+
 ## What?
 
 500words is a decentralized application running on your browser that challenges you to write at least 500 words a day. Writing, drawing, improvising (music) keeps your brain clean and exercises your creativity!

@@ -21,10 +21,12 @@
 		"redux-saga": "^1.0.1",
 		"scatterjs-core": "^2.7.9",
 		"semantic-ui-css": "^2.4.1",
-		"semantic-ui-react": "^0.85.0"
+		"semantic-ui-react": "^0.85.0",
+		"serve": "^11.3.2"
 	},
 	"scripts": {
-		"start": "react-scripts start",
+		"start": "serve -s build",
+		"dev": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
