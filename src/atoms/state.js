@@ -1,4 +1,5 @@
 import { atom, selector } from "recoil";
+import moment from "moment-timezone";
 
 // export const challengesAtom = atom({
 //     key: "challenges",
@@ -13,6 +14,22 @@ export const stateAtom = atom({
 export const profileAtom = atom({
     key: "profileAtom",
     default: null
+})
+
+export const timezoneSelector = selector({
+    key: "timezoneSel",
+    get: async ({ get }) => {
+        const profile = get(profileAtom)
+        if (profile && profile.rows[0]) return profile.rows[0].timezone;
+    }
+})
+
+export const deadlineSelector = selector({
+    key: "deadlineSelector",
+    get: async ({ get }) => {
+        const profile = get(profileAtom)
+        if (profile && profile.rows[0]) return moment(profile.rows[0].next_post_until, "X").format("dddd, MMMM Do YYYY, H:mm:ss");
+    }
 })
 
 
@@ -32,14 +49,6 @@ export const existingChallenges = selector({
     }
 })
 
-export const submittedSelector = selector({
-    key: "submittedSelector",
-    get: ({ get }) => {
-        const profile = get(profileAtom)
-        if (profile && profile.rows[0]) return profile.rows[0].last_post;
-        
-    }
-})
 
 export const pointsSelector = selector({
     key: "pointsSelector",

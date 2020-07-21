@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
-import { rpcAtom } from "../atoms/scatter.js"
+import { rpcAtom, scatterAccountAtom } from "../atoms/scatter.js" 
 import { profileAtom, stateAtom } from "../atoms/state.js"
 
 
-export function CheckForUser(props) {
+export function CheckForUser() {
+    const account = useRecoilValue(scatterAccountAtom)
     const setProfile = useSetRecoilState(profileAtom)
     const rpc = useRecoilValue(rpcAtom)
     const [state, setState] = useRecoilState(stateAtom)
 
-    useEffect(() => {
-        if (rpc && props.account) {
+    function update() {
+        if (rpc && account) {
             rpc.get_table_rows({
                 json: true,
                 code: process.env.REACT_APP_CONTRACT,
@@ -23,7 +24,7 @@ export function CheckForUser(props) {
                 const userData = await rpc.get_table_rows({
                     json: true,              // Get the response as json
                     code: process.env.REACT_APP_CONTRACT,     // Contract that we target
-                    scope: props.account.name,         // Account that owns the data
+                    scope: account.name,         // Account that owns the data
                     table: 'profile',        // Table name
                     limit: 10,               // Maximum number of rows that we want to get
                 })
@@ -31,9 +32,15 @@ export function CheckForUser(props) {
                 return {state, userData}
             })
         }
+    }
 
-        
-    }, [rpc, props.account])
+    useEffect(() => {
+        update();
+    }, [])
+
+    useEffect(() => {
+        update();
+    }, [rpc, account])
 
     return null;
 }

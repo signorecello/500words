@@ -15,16 +15,30 @@ ACTION words::close(name user) {
 
 // frontend should always first send an "open" action, that will automatically
 // register the user for the mandatory challenges
-ACTION words::open(name user)
+ACTION words::open(name user, const std::string timezone, uint64_t deadline)
 {
     profile user_profile(_self, user.value);
     auto it = user_profile.find(0);
     if (it == user_profile.end()) {
         user_profile.emplace(get_self(), [&](auto &p) {
             p.points = 0;
-            p.last_post = eosio::current_time_point().sec_since_epoch();
+            p.next_post_until = deadline + SUBMISSION_INTERVAL_SECS;
+            p.timezone = timezone;
         });
     }
+}
+
+ACTION words::change(name user, const std::string timezone, uint64_t past_deadline)
+{
+    profile user_profile(_self, user.value);
+    const auto &profile = user_profile.get(0, "User not found");
+
+    eosio::check(past_deadline < eosio::current_time_point().sec_since_epoch(), "need to send PAST deadline");
+
+    user_profile.modify(profile, get_self(), [&](auto &p) {
+        p.next_post_until = past_deadline + SUBMISSION_INTERVAL_SECS;
+        p.timezone = timezone;
+    });
 }
 
 // user posts and it sees if any data matches challenges
@@ -38,17 +52,59 @@ ACTION words::post(name user, std::string hash, uint64_t wordcount, short max_pa
     state state_info(_self, _self.value);
     const auto &st = state_info.get(0, "State not found");
     
-    longest(user, profile.last_post);
     speedy(user, total_time);
     nobreath(user, max_pause);
     writer(user, type);
     artist(user, type);
     
-    // he still always wins some points just for submitting
-    user_profile.modify(profile, get_self(), [&](auto &p) {
-        p.points += 10;
-        p.last_post = eosio::current_time_point().sec_since_epoch();
-    });
+
+    auto new_next_post_until = profile.next_post_until;
+    while (new_next_post_until < eosio::current_time_point().sec_since_epoch()) {
+        new_next_post_until += SUBMISSION_INTERVAL_SECS;
+    }
+    
+    
+    if (profile.next_post_until > eosio::current_time_point().sec_since_epoch()) {
+        // deadline is further than the current time
+        // if it is further than just 1 submission interval secs, increase the deadline
+
+        // so the deadline (which is greater than the current time) minus the current time is smaller
+        // than the submission interval
+        print((profile.next_post_until - eosio::current_time_point().sec_since_epoch()));
+        if ((profile.next_post_until - eosio::current_time_point().sec_since_epoch()) < SUBMISSION_INTERVAL_SECS) {
+            print("increasing");
+
+            longest(user, true);
+            user_profile.modify(profile, get_self(), [&](auto &p) {
+                p.points += 10;
+                p.next_post_until = new_next_post_until + SUBMISSION_INTERVAL_SECS;
+            });
+        }
+    } else {
+        longest(user, false);
+        user_profile.modify(profile, get_self(), [&](auto &p) {
+            p.next_post_until = new_next_post_until + SUBMISSION_INTERVAL_SECS;
+        });
+    }
+
+    // if (eosio::current_time_point().sec_since_epoch() < profile.next_post_until) {
+    //     print("first");
+    //     if (new_next_post_until < profile.next_post_until) {
+    //         print("inner first");
+    //         longest(user, profile.next_post_until);
+    //         // he still always wins some points just for submitting
+    //         user_profile.modify(profile, get_self(), [&](auto &p) {
+    //             p.points += 10;
+    //             p.next_post_until = new_next_post_until + SUBMISSION_INTERVAL_SECS;
+    //         });
+    //     }
+    // } else {
+    //     print("second");
+    //     user_profile.modify(profile, get_self(), [&](auto &p) {
+    //         p.next_post_until = new_next_post_until;
+    //     });
+    // }
+    
 
 }
 
@@ -89,7 +145,7 @@ void words::artist(name user, const std::string type)
 }
 
 // third section: awarding players
-void words::longest(name user, uint32_t last_post)
+void words::longest(name user, bool valid)
 {
     // instantiate tables
     challenges user_challenges(_self, user.value);
@@ -101,7 +157,7 @@ void words::longest(name user, uint32_t last_post)
     if (longest_streak != user_challenges.end()) {
         // increase counters
         user_challenges.modify(longest_streak, get_self(), [&](auto &c) {
-            if (last_post + SUBMISSION_INTERVAL_SECS > eosio::current_time_point().sec_since_epoch()) {
+            if (valid) {
                 c.record_value += 1;
             } else {
                 c.record_value = 0;
@@ -121,7 +177,7 @@ void words::longest(name user, uint32_t last_post)
         // increase counters
         user_challenges.emplace(get_self(), [&](auto &c) {
             c.challenge = name(LONGEST);
-            if (last_post + SUBMISSION_INTERVAL_SECS > eosio::current_time_point().sec_since_epoch()) {
+            if (valid) {
                 c.record_value = 1;
             } else {
                 c.record_value = 0;

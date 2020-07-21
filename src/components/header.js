@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Menu, Dropdown, Image } from "semantic-ui-react";
+import { Button, Menu, Dropdown, Image, Modal } from "semantic-ui-react";
 import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
 
 import { scatterAtom, scatterAccountAtom, eosAtom, rpcAtom } from "../atoms/scatter.js"
@@ -13,10 +13,11 @@ import ScatterEOS from '@scatterjs/eosjs2';
 import {JsonRpc, Api} from 'eosjs'
 
 import { CheckForUser } from "../utils/hooks"
+import { ProfileModal, TimezoneModal } from "./modals/modals"
 ScatterJS.plugins( new ScatterEOS() );
 
-const rpc = new JsonRpc(network.fullhost());
 
+const rpc = new JsonRpc(network.fullhost());
 
 function Header(props) {
 	const [scatterAccount, setScatterAccount] = useRecoilState(scatterAccountAtom)
@@ -60,7 +61,7 @@ function Header(props) {
 
 	return (
 		<Menu>
-			<CheckForUser account={scatterAccount} />
+			<CheckForUser />
 
 			<Menu.Item
 				name="home"
@@ -87,9 +88,9 @@ function Header(props) {
 				</Menu.Item>
 				<Menu.Item>
 					{scatterAccount ? (
-						<Button htmltype="button" onClick={logout}>
-							Log out
-						</Button>
+						<ProfileModal logout={logout}>
+							<TimezoneModal></TimezoneModal>
+						</ProfileModal>
 					) : (
 						<Button htmltype="button" onClick={login}>
 							Log in

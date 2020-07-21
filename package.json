@@ -9,8 +9,10 @@
 		"antd": "^3.13.5",
 		"axios": "^0.19.2",
 		"eosjs": "^20.0.0",
+		"moment-timezone": "^0.5.31",
 		"momentjs": "^2.0.0",
 		"murmurhash-js": "^1.0.0",
+		"node-sass": "^4.14.1",
 		"react": "^16.8.2",
 		"react-dom": "^16.8.2",
 		"react-redux": "^6.0.0",
@@ -21,7 +23,8 @@
 		"redux-saga": "^1.0.1",
 		"scatterjs-core": "^2.7.9",
 		"semantic-ui-css": "^2.4.1",
-		"semantic-ui-react": "^0.85.0"
+		"semantic-ui-react": "^0.85.0",
+		"styled-components": "^5.1.1"
 	},
 	"scripts": {
 		"start": "react-scripts start",

@@ -22,6 +22,24 @@
             ]
         },
         {
+            "name": "change",
+            "base": "",
+            "fields": [
+                {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
+                    "name": "timezone",
+                    "type": "string"
+                },
+                {
+                    "name": "past_deadline",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
             "name": "close",
             "base": "",
             "fields": [
@@ -52,6 +70,14 @@
                 {
                     "name": "user",
                     "type": "name"
+                },
+                {
+                    "name": "timezone",
+                    "type": "string"
+                },
+                {
+                    "name": "deadline",
+                    "type": "uint64"
                 }
             ]
         },
@@ -94,8 +120,12 @@
                     "type": "uint64"
                 },
                 {
-                    "name": "last_post",
+                    "name": "next_post_until",
                     "type": "uint32"
+                },
+                {
+                    "name": "timezone",
+                    "type": "string"
                 },
                 {
                     "name": "achievements",
@@ -129,6 +159,11 @@
         }
     ],
     "actions": [
+        {
+            "name": "change",
+            "type": "change",
+            "ricardian_contract": ""
+        },
         {
             "name": "close",
             "type": "close",

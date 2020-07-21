@@ -5,7 +5,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { scatterAtom, scatterAccountAtom, eosAtom } from "../atoms/scatter.js"
 import { network } from "../utils/network"
 import moment from "moment"
-import { submittedSelector, pointsSelector, achievementSelector } from "../atoms/state.js";
+import {  pointsSelector, achievementSelector } from "../atoms/state.js";
 import { transactionsAtom } from "../atoms/history";
 const murmur = require("murmurhash-js");
 
@@ -22,7 +22,6 @@ export default function Writing(props) {
 	const eos= useRecoilValue(eosAtom)
 	const account = useRecoilValue(scatterAccountAtom)
 
-	const lastSubmitted = useRecoilValue(submittedSelector)
 	const points = useRecoilValue(pointsSelector)
 	const challenges = useRecoilValue(achievementSelector)
 	const transactions = useRecoilValue(transactionsAtom)
@@ -64,6 +63,7 @@ export default function Writing(props) {
 
 
 	function submit() {
+
 		eos.transact({
 			actions: [
 				{
@@ -77,6 +77,8 @@ export default function Writing(props) {
 					],
 					data: {
 						user: account.name,
+						timezone: moment.tz.guess(),
+						deadline: moment.tz({hour: 23, minute: 59, second: 59, millisecond: 0}, moment.tz.guess()).unix()
 					},
 				},
 				{
@@ -131,16 +133,6 @@ export default function Writing(props) {
 				</Grid.Column>
 				<Grid.Column width={6}>
 					<Statistic.Group size="tiny" widths='two' style={{marginBottom: "1rem"}}>
-						<Statistic>
-							<Statistic.Label>
-								Last post
-							</Statistic.Label>
-							<Statistic.Value>
-								{moment.unix(lastSubmitted).format("DD/MM/YY")}
-								<br />
-								{moment.unix(lastSubmitted).format("hh:mma")}
-							</Statistic.Value>
-						</Statistic>
 						<Statistic>
 							<Statistic.Label>
 								Total points

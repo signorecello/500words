@@ -20,7 +20,6 @@ const inactiveStyle = {
 }
 
 export default function Achievements(props) {
-    const account = useRecoilValue(scatterAccountAtom)
     const existingChals = useRecoilValue(existingChallenges)
     const achievements = useRecoilValue(achievementSelector)
 
@@ -40,7 +39,7 @@ export default function Achievements(props) {
         return (
             <Container key={refreshKey}>
                 <Grid>
-                    <CheckForUser account={account} />
+                    <CheckForUser />
                     <Grid.Row>
                         <h1>Challenges</h1>
                     </Grid.Row>
@@ -86,7 +85,7 @@ export default function Achievements(props) {
     } else {
         return(
             <Container key={refreshKey}>
-                <CheckForUser account={account} />
+                <CheckForUser/>
                     Loading...
             </Container>
         )

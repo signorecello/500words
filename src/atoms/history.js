@@ -1,5 +1,5 @@
 import { atom, selector } from "recoil";
-
+import { getAvatar } from "../utils/avatars"
 
 import moment from "moment"
 export const transactionsAtom = atom({
@@ -7,13 +7,11 @@ export const transactionsAtom = atom({
     default: []
 })
 
-const avatars = ["jenny", "daniel", "ade", "chris", "christian", "elliot", "helen"]
-
-
 export const lastTransactionsSelector = selector({
     key: "lastTransactionsSelector",
     get: ({ get }) => {
         const tr = get(transactionsAtom)
+        const knownUsers = [];
         if (tr) {
             return tr.map((action) => {
                 let summary;
@@ -26,15 +24,23 @@ export const lastTransactionsSelector = selector({
                     detail = `just earned ${action.act.data.achievement}! Great work`
                 }
         
-                const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
                 if (summary) {
+                    const user = action.act.data.user
+                    const known = knownUsers.find((knownuser) => knownuser.accname === user)
+                    let avatar;
+                    if (known) {
+                        avatar = known.avatar
+                    } else {
+                        avatar = getAvatar(user)
+                        knownUsers.push({accname: user, avatar: avatar})
+                    }
                     return (
                         {
                             key: Math.random(),
                             date: moment(action["@timestamp"]).fromNow(),
-                            image: `https://semantic-ui.com/images/avatar/small/${randomAvatar}.jpg`,
+                            image: `https://semantic-ui.com/images/avatar/small/${avatar}.jpg`,
                             summary: `${summary}`,
-                            extraText: `${action.act.data.user} ${detail}`
+                            extraText: `${user} ${detail}`
                         }
                     )
                 }
