@@ -88,19 +88,8 @@ function About() {
                             </Accordion.Content>
 
 
-                            
-                            <Accordion.Title onClick={() => setActive("qudo1")}>
-                                <Icon name="dropdown" />
-                                What are QUDO rewards and how can I earn them?
-                            </Accordion.Title>
-                            <Accordion.Content active={active === "qudo1"}>
-                                QUDO rewards are a blockchain-powered rewarding mechanism developed by BlockBastards. It's currently mobile-oriented, although
-                                as this app shows, it can also be applied to web applications. 
-                                <br /><br />
-                                To enable rewards, we need to collect some data from you such as your account name and your public key, and send it to our servers
-                                so we can interact with the QUDO ecosystem. That's why you need to accept QUDO rewards. You can still write and post and use this
-                                app if you don't have QUDO rewards enabled.
-                            </Accordion.Content>
+
+
                         </Accordion>
                     </Grid.Column>
                     <Grid.Column width={5}>

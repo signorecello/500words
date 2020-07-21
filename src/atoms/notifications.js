@@ -8,5 +8,5 @@ import moment from "moment-timezone";
 
 export const notificationsAtom = atom({
     key: "notificationsAtom",
-    default: []
+    default: null
 })

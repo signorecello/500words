@@ -24,13 +24,16 @@ function Header(props) {
 	const [scatterInstance, setScatterInstance] = useRecoilState(scatterAtom)
 	const setRpc = useSetRecoilState(rpcAtom)
 	const [eos, setEos] = useRecoilState(eosAtom)
+	const [isAuth, setIsAuth] = useState(null)
 
 
     const achievements = useRecoilValue(achievementSelector)
 
 	function login() {
 		ScatterJS.connect("500words", {network}).then(connected => {
-			if(!connected) return false;
+			if(!connected) {
+				return false;
+			}
 			
 			window.ScatterJS = null;
 			
@@ -59,6 +62,12 @@ function Header(props) {
 		login();
 	}, [])
 
+
+	useEffect(() => {
+		if (eos) setIsAuth(true)
+	}, [eos])
+
+
 	return (
 		<Menu>
 			<CheckForUser />
@@ -67,14 +76,18 @@ function Header(props) {
 				name="home"
 				href="/"
 			/>
-			<Menu.Item
-				name="write"
-				href="/write"
-			/>
-			<Menu.Item
-				name="achievements"
-				href="/achievements"
-			/>
+			{isAuth &&
+				<>
+					<Menu.Item
+						name="write"
+						href="/write"
+					/>
+					<Menu.Item
+						name="achievements"
+						href="/achievements"
+					/>
+				</>
+			}
 
 			<Menu.Menu position="right">
 				<Menu.Item

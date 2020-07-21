@@ -1,68 +1,41 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 500words
 
-## Available Scripts
+Try the working website at https://fivehundredw.herokuapp.com/ !
 
-In the project directory, you can run:
+## What?
 
-### `npm start`
+500words is a decentralized application running on your browser that challenges you to write at least 500 words a day. Writing, drawing, improvising (music) keeps your brain clean and exercises your creativity!
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+You also can earn some little achievements for being extra fast every day, or for writing for a number of days in a row. This worthless achievements can be fun just to show off!
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## Why?
 
-### `npm test`
+First of all, because I was a teacher and now that I'm a web developer, I found that creativity is key for this job. The more you develop it, the more you see the broader picture and find smart and uncommon solutions for your problems.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Second, because one of the best things of blockchain is the amount of stuff you can do directly ON the blockchain. You can think of the blockchain as a very secure (yet slow and expensive) database. With the right interactions, you can almost treat a smart contract as a backend.
 
-### `npm run build`
+And third, because I wanted to try the new Facebook's state manager: [Recoil](https://recoiljs.org/). I like [Redux](https://redux.js.org/) but I also want to learn something new everytime. Recoil is amazing!
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+This project is basically an exercise on how much can you do without a backend. It's just a webpage interacting with your wallet and with the blockchain.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+## How?
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+I did this using a EOSIO-based blockchain, called [Telos](https://www.telosfoundation.io/). For interacting with it, I implemented the [Scatter](https://get-scatter.com/) protocol. 
 
-### `npm run eject`
+For the frontend, I used [React.js](https://reactjs.org) and [Recoil.js](https://recoiljs.org/). I also decided to experiment [semantic-ui](https://semantic-ui.com/) for the design assets. I liked them!
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+As I say, this app has no backend! But eventually I'll want to interact with [QUDO](https://qudo.io), the rewarding mechanism I created for [BlockBastards](https://blockbastards.io). For that I'll need some kind of simple backend.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## I want to clone this!
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+I'm happy this little project pleased you! Go ahead and clone it! Some things you may want to know:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- The contract is in the "contracts" folder. Just open the .hpp file and change the top defines to whatever constants you want. Some of them you'll also have to replicate on the .env file.
+- Rename the .env.example file to .env and change the variables inside to your liking
+- Run npm i to install dependencies
+- Run npm start to start your dapp!
+- You'll need to install Scatter (or other scatter-based wallets such as Wombat) and add the telos testnet network
 
-## Learn More
+## I want to help too!
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Much appreciated. Just clone, make the changes, and PR :)
