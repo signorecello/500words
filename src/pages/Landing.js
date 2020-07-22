@@ -30,7 +30,6 @@ function Landing() {
 							As a bonus, you’ll receive achievements and will be rewarding using the QUDO ecosystem. Now go write something!
 						</Container>
 					</Grid.Column>
-					
 					<Grid.Column width={5} >
 						<Header size="huge">Last events</Header>
 						<Feed events={transactions}/>

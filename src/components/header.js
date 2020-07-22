@@ -13,11 +13,16 @@ import ScatterEOS from '@scatterjs/eosjs2';
 import {JsonRpc, Api} from 'eosjs'
 
 import { CheckForUser } from "../utils/hooks"
-import { ProfileModal, TimezoneModal } from "./modals/modals"
+import { ProfileModal, TimezoneModal, RegisterModal } from "./modals/modals"
+import styled from "styled-components";
 ScatterJS.plugins( new ScatterEOS() );
 
 
 const rpc = new JsonRpc(network.fullhost());
+
+const StyledMetaButtons = styled.div`
+	padding: 0 1rem;
+`
 
 function Header(props) {
 	const [scatterAccount, setScatterAccount] = useRecoilState(scatterAccountAtom)
@@ -105,9 +110,12 @@ function Header(props) {
 							<TimezoneModal></TimezoneModal>
 						</ProfileModal>
 					) : (
-						<Button htmltype="button" onClick={login}>
-							Log in
-						</Button>
+						<StyledMetaButtons>
+							<Button htmltype="button" onClick={login}>
+								Log in
+							</Button>
+							<RegisterModal />
+						</StyledMetaButtons>
 					)}
 				</Menu.Item>
 			</Menu.Menu>

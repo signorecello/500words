@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Menu, Dropdown, Image, Modal, Item, Card } from "semantic-ui-react";
+import { Button, Menu, Dropdown, Image, Modal, Item, Card, Header } from "semantic-ui-react";
 import styled from "styled-components";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import { scatterAtom, scatterAccountAtom, eosAtom } from "../../atoms/scatter.js"
@@ -8,15 +8,14 @@ import moment from "moment-timezone";
 import { sendTimezone } from "../../utils/transactions"
 import { getAvatar } from "../../utils/avatars.js";
 import { CheckForUser } from "../../utils/hooks.js";
+import { Link } from "react-router-dom";
 
 const StyledModal = styled(Modal)`
-    .position-absolute {
+    &.top {
         position: absolute;
+        top: 5%;
+        right: 5%;
     }
-
-    @extend .position-absolute;
-    top: 5%;
-    right: 5%;
 `
 
 const StyledDescriptionModal = styled(Modal.Description)`   
@@ -24,17 +23,88 @@ const StyledDescriptionModal = styled(Modal.Description)`
     justify-content: center;
     flex-wrap: wrap;
     padding: 1.25rem 1.5rem;
+
+    &.text {
+        display: block;
+    }
 `
 
 const StyledContentModal = styled(Modal.Content)`
     display: flex !important;
     justify-content: center;
+
+    &.list {
+        padding: 3rem 10rem !important;
+    }
 `
 
 const StyledItemGroup = styled(Item.Group)`
     padding: 1.25rem 1.5rem;
 `
 
+const StyledItem = styled(Item)`
+    display: flex;
+    align-items: center;    
+`
+
+const StyledItemContent = styled(Item.Content)`
+    padding: 1rem;    
+`
+
+const StyledHeader = styled(Header)`
+    text-align: center
+`
+
+export function RegisterModal() {
+    return (
+        <StyledModal
+            trigger={<Button>Register</Button>}
+            size="small">
+            <Modal.Header>
+                Register
+            </Modal.Header>
+            <StyledDescriptionModal className="text">
+                <StyledHeader> Welcome to the web 3.0!</StyledHeader>
+                Your data is stored nowhere, and everywhere: that's the blockchain magic.
+                <StyledHeader>Is it safe?</StyledHeader>
+                It is so safe that you don't even need to set up a password.
+                Just create a wallet, and you're good to go.
+            </StyledDescriptionModal>
+            <StyledContentModal className="list" image>
+                <Item.Group link divided>
+                    <StyledItem 
+                        href="https://chrome.google.com/webstore/detail/wombat-eos-telos-wallet/amkmjjmmflddogmhpjloimipbofnfjih">
+                        <Item.Image size="small" src={require("../../images/wombat.png")}/>
+                        <StyledItemContent>
+                            <Item.Header>
+                                Wombat Wallet
+                            </Item.Header>
+                            <Item.Description>
+                                A browser extension. Supports EOS and TELOS blockchains,
+                                so it's a great fit for this website. It's dead simple,
+                                just install and follow the instructions
+                            </Item.Description>
+                        </StyledItemContent>
+                    </StyledItem>
+                    <StyledItem 
+                        href="http://get-scatter.com/">
+                        <Item.Image size="small" src={require("../../images/scatter.png")}/>
+                        <StyledItemContent>
+                            <Item.Header>
+                                Scatter
+                            </Item.Header>
+                            <Item.Description>
+                                A desktop wallet. Supports EOS, TELOS and also Ethereum,
+                                so it's a nice wallet if you want to trade or interact
+                                with Ethereum applications.
+                            </Item.Description>
+                        </StyledItemContent>
+                    </StyledItem>
+                </Item.Group>
+            </StyledContentModal>
+        </StyledModal>
+    )
+}
 
 export function ProfileModal({logout, children}) {
     const [activeModal, setActiveModal] = useState("home");
@@ -47,6 +117,7 @@ export function ProfileModal({logout, children}) {
 
     return (
         <StyledModal 
+            className="top"
             trigger={<Button onClick={resetAndShow}>Profile</Button>}
             onClose={resetAndShow}
             open={isModalOpen}
