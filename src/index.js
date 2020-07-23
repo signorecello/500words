@@ -14,12 +14,34 @@ import {
 } from 'recoil';
 
 
-ReactDOM.render(
-	<Suspense fallback={<div>Loading...</div>}>
-		<RecoilRoot>
-			<App />
-		</RecoilRoot>
-	</Suspense>,
+import { UALProvider, withUAL } from 'ual-reactjs-renderer'
+import { Scatter } from 'ual-scatter'
+import { Lynx } from 'ual-lynx'
+import { Anchor } from "ual-anchor"
+import { ualChainInfo } from "./utils/network"
 
+
+const scatter = new Scatter([ualChainInfo], { appName: '500words' })
+const lynx = new Lynx([ualChainInfo], { appName: '500words' })
+const anchor = new Anchor([ualChainInfo], {
+	// Required: The app name, required by anchor-link. Short string identifying the app
+	appName: '500words',
+	// Optional: A flag to disable the Greymass Fuel integration, defaults to false (enabled)
+	disableGreymassFuel: true,
+	// Optional: A flag to enable the Anchor Link UI request status, defaults to false (disabled)
+	requestStatus: false,  
+  })
+  
+
+const MyUALConsumer = withUAL(App)
+
+ReactDOM.render(
+	<UALProvider chains={[ualChainInfo]} authenticators={[scatter, lynx, anchor]} appName={'500words'}>
+		<Suspense fallback={<div>Loading...</div>}>
+			<RecoilRoot>
+		    	<MyUALConsumer />
+			</RecoilRoot>
+		</Suspense>
+	</UALProvider>,
 	document.getElementById("root")
 );

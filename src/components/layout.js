@@ -9,9 +9,10 @@ import { notificationsAtom } from "../atoms/notifications";
 export default function Layout(props) {
 	const notification = useRecoilValue(notificationsAtom)
 
+
 	return (
 		<div>
-			<Header/>
+			<Header ual={props.ual.ual}/>
 			{notification &&
 				<Message positive>
 					<Message.Header>Whoa! You just earned the {notification} achievement! Amazing!</Message.Header>

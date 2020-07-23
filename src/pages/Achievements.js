@@ -4,7 +4,6 @@ import { List, Container, Image, Card, Button, Grid } from "semantic-ui-react";
 import { existingChallenges, achievementSelector } from "../atoms/state.js"
 import { useRecoilValue, useRecoilState } from "recoil";
 import { CheckForUser } from "../utils/hooks"
-import { eosAtom, scatterAccountAtom } from "../atoms/scatter.js"
 import { images, details } from "../copies/challenges"
 
 const achievement = require("../images/icn-trophy-bronze.png")

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Button, Menu, Dropdown, Image, Modal, Item, Card, Header } from "semantic-ui-react";
+import { Button, Menu, Dropdown, Image, Modal, Item, Card, Header, List } from "semantic-ui-react";
 import styled from "styled-components";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
-import { scatterAtom, scatterAccountAtom, eosAtom } from "../../atoms/scatter.js"
+import { ualAtom } from "../../atoms/ual.js"
 import { timezoneSelector, deadlineSelector } from "../../atoms/state"
 import moment from "moment-timezone";
 import { sendTimezone } from "../../utils/transactions"
@@ -42,13 +42,16 @@ const StyledItemGroup = styled(Item.Group)`
     padding: 1.25rem 1.5rem;
 `
 
-const StyledItem = styled(Item)`
+const StyledListImageWrapper = styled.div`
+    height: 80px;
+    align-items: center;
     display: flex;
-    align-items: center;    
 `
 
-const StyledItemContent = styled(Item.Content)`
-    padding: 1rem;    
+const StyledListImage = styled(Image)`
+    margin-right: auto !important;
+    margin-left: auto !important;
+    display: block !important;    
 `
 
 const StyledHeader = styled(Header)`
@@ -65,42 +68,36 @@ export function RegisterModal() {
             </Modal.Header>
             <StyledDescriptionModal className="text">
                 <StyledHeader> Welcome to the web 3.0!</StyledHeader>
+                <br />
                 Your data is stored nowhere, and everywhere: that's the blockchain magic.
-                <StyledHeader>Is it safe?</StyledHeader>
-                It is so safe that you don't even need to set up a password.
-                Just create a wallet, and you're good to go.
+                To continue, just install one of these wallets. That's right, no more passwords!
+                <br /><br />
+                Visit the <a href="/about" target="_blank">about</a> page to know more about
+                this bright new technology
             </StyledDescriptionModal>
             <StyledContentModal className="list" image>
-                <Item.Group link divided>
-                    <StyledItem 
-                        href="https://chrome.google.com/webstore/detail/wombat-eos-telos-wallet/amkmjjmmflddogmhpjloimipbofnfjih">
-                        <Item.Image size="small" src={require("../../images/wombat.png")}/>
-                        <StyledItemContent>
-                            <Item.Header>
-                                Wombat Wallet
-                            </Item.Header>
-                            <Item.Description>
-                                A browser extension. Supports EOS and TELOS blockchains,
-                                so it's a great fit for this website. It's dead simple,
-                                just install and follow the instructions
-                            </Item.Description>
-                        </StyledItemContent>
-                    </StyledItem>
-                    <StyledItem 
-                        href="http://get-scatter.com/">
-                        <Item.Image size="small" src={require("../../images/scatter.png")}/>
-                        <StyledItemContent>
-                            <Item.Header>
-                                Scatter
-                            </Item.Header>
-                            <Item.Description>
-                                A desktop wallet. Supports EOS, TELOS and also Ethereum,
-                                so it's a nice wallet if you want to trade or interact
-                                with Ethereum applications.
-                            </Item.Description>
-                        </StyledItemContent>
-                    </StyledItem>
-                </Item.Group>
+                <List celled link>
+                    <List.Item as="a" href="https://www.getwombat.io/" target="_blank">
+                        <StyledListImageWrapper>
+                            <StyledListImage size="small" src={require("../../images/wombat.png")} />
+                        </StyledListImageWrapper>
+                        <List.Content>
+                            A browser extension. Supports EOS and TELOS blockchains,
+                            so it's a great fit for this website. It's dead simple,
+                            just install and follow the instructions
+                        </List.Content>
+                    </List.Item>
+                    <List.Item as="a" href="http://get-scatter.com" target="_blank">
+                        <StyledListImageWrapper>
+                            <StyledListImage size="small"  src={require("../../images/scatter.png")} />
+                        </StyledListImageWrapper>
+                        <List.Content>
+                            A desktop wallet. Supports EOS, TELOS and also Ethereum,
+                            so it's a nice wallet if you want to trade or interact
+                            with Ethereum applications.
+                        </List.Content>
+                    </List.Item>
+                </List>
             </StyledContentModal>
         </StyledModal>
     )
@@ -109,6 +106,19 @@ export function RegisterModal() {
 export function ProfileModal({logout, children}) {
     const [activeModal, setActiveModal] = useState("home");
     const [isModalOpen, setIsModalOpen] = useState(false)
+
+    const account = useRecoilValue(ualAtom)
+    const [accName, setAccName] = useState("");
+
+    async function asyncGetAccName() {
+        const name = await account.activeUser.getAccountName()
+        setAccName(name)
+    }
+
+    useEffect(() => {
+        asyncGetAccName()
+    }, [account])
+
 
     function resetAndShow() {
         setActiveModal("home");
@@ -124,7 +134,7 @@ export function ProfileModal({logout, children}) {
             size="mini">
                 {
                     activeModal === "home"
-                    ? <ProfileHomeScreen setActiveModal={setActiveModal} close={resetAndShow}/>
+                    ? <ProfileHomeScreen accountName={accName} setActiveModal={setActiveModal} close={resetAndShow}/>
                     : activeModal === "timezone"
                     ? <TimezoneModal close={resetAndShow}/>
                     :
@@ -134,10 +144,10 @@ export function ProfileModal({logout, children}) {
     )
 }
 
-function ProfileHomeScreen({setActiveModal, close}) {
+function ProfileHomeScreen({accountName, setActiveModal, close}) {
     const logout = () => {};
     const deadline = useRecoilValue(deadlineSelector)
-    const account = useRecoilValue(scatterAccountAtom)
+    // const account = useRecoilValue(scatterAccountAtom)
 
     return (
         <>
@@ -146,10 +156,10 @@ function ProfileHomeScreen({setActiveModal, close}) {
             </Modal.Header>
             <StyledDescriptionModal>
                 <Card>
-                    <Image src={`https://semantic-ui.com/images/avatar/large/${getAvatar(account.name)}.jpg`} />
+                    <Image src={`https://semantic-ui.com/images/avatar/large/${getAvatar(accountName)}.jpg`} />
                     <Card.Content>
                         <Card.Header className="justify-content-center">
-                            {account.name}
+                            {accountName}
                         </Card.Header>
                         <Card.Description>
                             <StyledItemGroup>
@@ -183,11 +193,10 @@ function ProfileHomeScreen({setActiveModal, close}) {
 
 
 function ChangeTz({close}) {
-	const account = useRecoilValue(scatterAccountAtom)
     const [tzNames, setTzNames] = useState();
     const [tz, setTz] = useState();
-    const eos = useRecoilValue(eosAtom)
     const [success, setSuccess] = useState(null)
+    const account = useRecoilValue(ualAtom)
 
     useEffect(() => {
         const tzNamesArr = moment.tz.names().map((i) => {
@@ -205,7 +214,7 @@ function ChangeTz({close}) {
     function sendEosTransaction() {
         const deadline = moment.tz({hour: 23, minute: 59, second: 59}, tz).subtract(process.env.REACT_APP_SUBMISSION_INTERVAL_DAYS, "days").unix()
         const transaction = sendTimezone({account, tz, deadline})
-        eos.transact(transaction, { blocksBehind: 3, expireSeconds: 30 })
+        account.signTransaction(transaction, { blocksBehind: 3, expireSeconds: 30 })
         .then((result) => {
             setSuccess("Success!")
         })
@@ -304,7 +313,7 @@ function TzSet({close, setChangingTz}) {
     
 }
 
-export function TimezoneModal({close}) {
+export function TimezoneModal({accountName, close}) {
     const [changingTz, setChangingTz] = useState(false)
 
     return (

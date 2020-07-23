@@ -1,11 +1,9 @@
 
-import ScatterJS from 'scatterjs-core';
-
-export const network = ScatterJS.Network.fromJson({
-	blockchain: "eos",
+export const ualChainInfo = {
 	chainId: process.env.REACT_APP_CHAIN_ID,
-	host: process.env.REACT_APP_TLOS_HTTP_ENDPOINT,
-	name: process.env.REACT_APP_CHAIN_NAME,
-	port: process.env.REACT_APP_PROTOCOL === "https" ? 443 : 80,
-	protocol: process.env.REACT_APP_PROTOCOL
-});
+	rpcEndpoints: [{
+		protocol: process.env.REACT_APP_PROTOCOL,
+		host: process.env.REACT_APP_TLOS_HTTP_ENDPOINT,
+		port: process.env.REACT_APP_PROTOCOL === "https" ? 443 : 80,
+	}]
+}

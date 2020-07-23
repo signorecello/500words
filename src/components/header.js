@@ -2,76 +2,43 @@ import React, { useEffect, useState } from "react";
 import { Button, Menu, Dropdown, Image, Modal } from "semantic-ui-react";
 import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
 
-import { scatterAtom, scatterAccountAtom, eosAtom, rpcAtom } from "../atoms/scatter.js"
+import { ualAtom } from "../atoms/ual.js"
 import { achievementSelector } from "../atoms/state"
 
 import { images } from "../copies/challenges"
 import { network } from "../utils/network"
 
-import ScatterJS from '@scatterjs/core';
-import ScatterEOS from '@scatterjs/eosjs2';
-import {JsonRpc, Api} from 'eosjs'
-
 import { CheckForUser } from "../utils/hooks"
 import { ProfileModal, TimezoneModal, RegisterModal } from "./modals/modals"
 import styled from "styled-components";
-ScatterJS.plugins( new ScatterEOS() );
-
-
-const rpc = new JsonRpc(network.fullhost());
-
 const StyledMetaButtons = styled.div`
 	padding: 0 1rem;
 `
 
 function Header(props) {
-	const [scatterAccount, setScatterAccount] = useRecoilState(scatterAccountAtom)
-	const [scatterInstance, setScatterInstance] = useRecoilState(scatterAtom)
-	const setRpc = useSetRecoilState(rpcAtom)
-	const [eos, setEos] = useRecoilState(eosAtom)
-	const [isAuth, setIsAuth] = useState(null)
-
-
     const achievements = useRecoilValue(achievementSelector)
+	const [ual, setUal] = useRecoilState(ualAtom)
 
-	function login() {
-		ScatterJS.connect("500words", {network}).then(connected => {
-			if(!connected) {
-				return false;
-			}
-			
-			window.ScatterJS = null;
-			
-
-			const eos = ScatterJS.eos(network, Api, {rpc});
-			setEos(eos)
-			// const scatter = ScatterJS.scatter;
-			ScatterJS.login().then(() => {
-				// const account = ScatterJS.identity.accounts.find(x => x.blockchain === 'eos');
-				let account = ScatterJS.account("eos")
-				// // console.log(account)
-				setScatterAccount(account)
-				setScatterInstance(ScatterJS)
-				// setEos(scatterEos)
-			})
-		})
+	window.ual = props.ual;
+	async function login() {
+		await props.ual.showModal()
 	}
 
-	function logout() {
-		setScatterAccount(null)
+	async function logout() {
+		await props.ual.logout()
 	}
 
-
 	useEffect(() => {
-		setRpc(rpc)
-		login();
-	}, [])
+		if (props.ual.activeUser) {
+			setUal(props.ual)
+		} else {
+			setUal(null)
+		}
+	}, [props.ual])
 
-
-	useEffect(() => {
-		if (eos) setIsAuth(true)
-	}, [eos])
-
+	// useEffect(() => {
+	// 	login();
+	// }, [])
 
 	return (
 		<Menu>
@@ -81,7 +48,7 @@ function Header(props) {
 				name="home"
 				href="/"
 			/>
-			{isAuth &&
+			{ual &&
 				<>
 					<Menu.Item
 						name="write"
@@ -100,15 +67,15 @@ function Header(props) {
 					href="/about"
 				/>
 				<Menu.Item>
-					{achievements && achievements.map((ach) => 
-						<Image avatar verticalAlign="middle" src={images[ach].thumbnail} key={images[ach].thumbnail} alt={ach} />
-					)}
-				</Menu.Item>
-				<Menu.Item>
-					{scatterAccount ? (
-						<ProfileModal logout={logout}>
-							<TimezoneModal></TimezoneModal>
-						</ProfileModal>
+					{ual ? (
+						<StyledMetaButtons>
+							<ProfileModal>
+								<TimezoneModal></TimezoneModal>
+							</ProfileModal>
+							<Button onClick={logout}>
+								Log out
+							</Button>
+						</StyledMetaButtons>
 					) : (
 						<StyledMetaButtons>
 							<Button htmltype="button" onClick={login}>

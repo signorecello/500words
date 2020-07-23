@@ -6,26 +6,29 @@ import Achievements from "./pages/Achievements";
 import Layout from "./components/layout";
 import About from "./pages/About";
 import { transactionsAtom } from "./atoms/history"
+import { ualAtom } from "./atoms/ual"
 
 import moment from "moment";
 import { notificationsAtom } from "./atoms/notifications";
-import { scatterAccountAtom } from "./atoms/scatter.js"
 import { useRecoilValue, useRecoilState } from "recoil";
 const HyperionSocketClient = require('@eosrio/hyperion-stream-client').default;
 const client = new HyperionSocketClient(process.env.REACT_APP_TLOS_HTTP_ENDPOINT, {async: true});
 
 
-function ProtectedRoutes() {
-
-	return (
-		<>
-		</>
-	)
-}
-
-export default function App() {
+export default function App(props) {
 	const [transactions, setTransactions] = useRecoilState(transactionsAtom)
 	const [notification, setNotification] = useRecoilState(notificationsAtom)
+	const [ual, setUal] = useRecoilState(ualAtom)
+
+
+	// function logout() {
+	// 	setScatterAccount(null)
+	// }
+
+
+	// useEffect(() => {
+	// 	login()
+	// }, [props.ual])
 
 	let buffer = [];
 	useEffect(() => {	
@@ -56,15 +59,14 @@ export default function App() {
 			setTransactions(buffer)
 		}, 2000)
 	}, [])
-	const [scatterAccount, setScatterAccount] = useRecoilState(scatterAccountAtom)
 
 	return (
 		<BrowserRouter>
-			<Layout>
+			<Layout ual={props}>
 				<Route exact path="/" render={() => <Landing/>} />
 				<Route exact path="/about" render={() => <About/>} />
-				{scatterAccount && <Route exact path="/write" render={() => <Writing/>} />}
-				{scatterAccount && <Route exact path="/achievements" render={() => <Achievements/>} />}
+				{ual && <Route exact path="/write" render={() => <Writing/>} />}
+				{ual && <Route exact path="/achievements" render={() => <Achievements/>} />}
 			</Layout>
 		</BrowserRouter>
 	);

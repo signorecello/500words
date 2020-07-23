@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Form, TextArea, Button, Container, Grid, Header, Statistic, Message } from "semantic-ui-react";
 
 import { useRecoilState, useRecoilValue } from "recoil";
-import { scatterAtom, scatterAccountAtom, eosAtom } from "../atoms/scatter.js"
 import { network } from "../utils/network"
-import moment from "moment"
 import {  pointsSelector, achievementSelector } from "../atoms/state.js";
 import { transactionsAtom } from "../atoms/history";
-const murmur = require("murmurhash-js");
+import { ualAtom } from "../atoms/ual"
+
+import { write } from "../utils/transactions"
 
 
 export default function Writing(props) {
@@ -19,8 +19,7 @@ export default function Writing(props) {
 	const [wordCount, setWordCount] = useState(0);
 	const [reachedMin, setReachedMin] = useState(false);
 
-	const eos= useRecoilValue(eosAtom)
-	const account = useRecoilValue(scatterAccountAtom)
+	const account = useRecoilValue(ualAtom)
 
 	const points = useRecoilValue(pointsSelector)
 	const challenges = useRecoilValue(achievementSelector)
@@ -56,53 +55,15 @@ export default function Writing(props) {
 		setReachedMin(count > MINIMUM)
 	}, [text])
 
-	useEffect(() => {
 
-	}, [success])
-
-
-
-	function submit() {
-
-		eos.transact({
-			actions: [
-				{
-					account: process.env.REACT_APP_CONTRACT,
-					name: "open",
-					authorization: [
-						{
-							actor: account.name,
-							permission: "active",
-						},
-					],
-					data: {
-						user: account.name,
-						timezone: moment.tz.guess(),
-						deadline: moment.tz({hour: 23, minute: 59, second: 59, millisecond: 0}, moment.tz.guess()).unix()
-					},
-				},
-				{
-					account: process.env.REACT_APP_CONTRACT,
-					name: "post",
-					authorization: [
-						{
-							actor: account.name,
-							permission: "active",
-						},
-					],
-					data: {
-						user: account.name,
-						hash: murmur.murmur3(text, "500words!"),
-						wordcount: wordCount,
-						max_pause: maxPause,
-						total_time: totalTime,
-						type: process.env.REACT_APP_WRITE_TYPE
-					},
-				}
-			],
-		}, {
-			blocksBehind: 3,
-			expireSeconds: 30
+	async function submit() {
+		const accname = await account.activeUser.getAccountName()
+		const transaction = write({accname, wordCount, maxPause, totalTime, text});
+		console.log(transaction)
+		account.activeUser.signTransaction(transaction, {
+			// blocksBehind: 3,
+			// expireSeconds: 30
+			broadcast: true
 		})
 		.then((result) => {
 			setSuccess(true)

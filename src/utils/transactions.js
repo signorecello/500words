@@ -1,3 +1,6 @@
+import moment from "moment"
+const murmur = require("murmurhash-js");
+
 export function sendTimezone({account, tz, deadline}) {
     console.log(tz)
     return {
@@ -7,7 +10,7 @@ export function sendTimezone({account, tz, deadline}) {
                 name: "change",
                 authorization: [
                     {
-                        actor: account.name,
+                        actor: account.activeUser.getAccountName(),
                         permission: "active",
                     },
                 ],
@@ -15,6 +18,46 @@ export function sendTimezone({account, tz, deadline}) {
                     user: account.name,
                     timezone: tz,
                     past_deadline: deadline
+                },
+            }
+        ],
+    }
+}
+
+export function write({accname, wordCount, maxPause, totalTime, text}) {
+    return {
+        actions: [
+            {
+                account: process.env.REACT_APP_CONTRACT,
+                name: "open",
+                authorization: [
+                    {
+                        actor: accname,
+                        permission: "active",
+                    },
+                ],
+                data: {
+                    user: accname,
+                    timezone: moment.tz.guess(),
+                    deadline: moment.tz({hour: 23, minute: 59, second: 59, millisecond: 0}, moment.tz.guess()).unix()
+                },
+            },
+            {
+                account: process.env.REACT_APP_CONTRACT,
+                name: "post",
+                authorization: [
+                    {
+                        actor: accname,
+                        permission: "active",
+                    },
+                ],
+                data: {
+                    user: accname,
+                    hash: murmur.murmur3(text, "500words!"),
+                    wordcount: wordCount,
+                    max_pause: maxPause,
+                    total_time: totalTime,
+                    type: process.env.REACT_APP_WRITE_TYPE
                 },
             }
         ],
