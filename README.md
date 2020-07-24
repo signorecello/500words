@@ -1,6 +1,6 @@
 # 500words
 
-Try the working website at https://fivehundredw.herokuapp.com/ !
+Try the working website at https://500words.app !
 
 ## What?
 
@@ -20,7 +20,7 @@ This project is basically an exercise on how much can you do without a backend. 
 
 ## How?
 
-I did this using a EOSIO-based blockchain, called [Telos](https://www.telosfoundation.io/). For interacting with it, I implemented the [Scatter](https://get-scatter.com/) protocol. 
+I did this using a EOSIO-based blockchain, called [Telos](https://www.telosfoundation.io/). For interacting with it, I implemented the [UAL](https://eos.io/build-on-eosio/universal-authenticator-library/)
 
 For the frontend, I used [React.js](https://reactjs.org) and [Recoil.js](https://recoiljs.org/). I also decided to experiment [semantic-ui](https://semantic-ui.com/) for the design assets. I liked them!
 

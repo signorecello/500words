@@ -40,12 +40,12 @@ export function RegisterModal() {
                             <StyledListImage size="small" src={require("../../images/wombat.png")} />
                         </StyledListImageWrapper>
                         <List.Content>
-                            A browser extension. Supports EOS and TELOS blockchains,
-                            so it's a great fit for this website. It's dead simple,
-                            just install and follow the instructions
+                            A browser extension and a mobile app. Dead simple,
+                            just install and follow the instructions. You'll be
+                            able to use 500words in less than 2 minutes.
                         </List.Content>
                     </List.Item>
-                    <List.Item as="a" href="http://get-scatter.com" target="_blank" rel="noopener noreferrer">
+                    {/* <List.Item as="a" href="http://get-scatter.com" target="_blank" rel="noopener noreferrer">
                         <StyledListImageWrapper>
                             <StyledListImage size="small"  src={require("../../images/scatter.png")} />
                         </StyledListImageWrapper>
@@ -54,7 +54,7 @@ export function RegisterModal() {
                             so it's a nice wallet if you want to trade or interact
                             with Ethereum applications.
                         </List.Content>
-                    </List.Item>
+                    </List.Item> */}
                 </List>
             </StyledContentModal>
         </StyledModal>
