@@ -43,6 +43,8 @@ export const lastTransactionsSelector = selector({
                             extraText: `${user} ${detail}`
                         }
                     )
+                } else {
+                    return null
                 }
             }).filter((e) => e).slice(0, 10);
         }

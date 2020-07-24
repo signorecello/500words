@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
-import Layout from "../components/layout";
+import React from "react";
 import { Container, Grid, Image, Feed, Header } from "semantic-ui-react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { lastTransactionsSelector, transactionsAtom } from "../atoms/history";
-import axios from "axios"
+import { useRecoilValue } from "recoil";
+import { lastTransactionsSelector } from "../atoms/history";
 
 const typewriter = require("../images/typewriter-sized.jpg");
 

@@ -1,62 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { Button, Menu, Dropdown, Image, Modal, Item, Card, Header, List } from "semantic-ui-react";
-import styled from "styled-components";
-import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
+import React, { useEffect, useState, useCallback } from "react";
+import { Button, Dropdown, Image, Modal, Item, Card, List } from "semantic-ui-react";
+import { useRecoilValue } from "recoil";
 import { ualAtom } from "../../atoms/ual.js"
 import { timezoneSelector, deadlineSelector } from "../../atoms/state"
 import moment from "moment-timezone";
 import { sendTimezone } from "../../utils/transactions"
 import { getAvatar } from "../../utils/avatars.js";
 import { CheckForUser } from "../../utils/hooks.js";
-import { Link } from "react-router-dom";
-
-const StyledModal = styled(Modal)`
-    &.top {
-        position: absolute;
-        top: 5%;
-        right: 5%;
-    }
-`
-
-const StyledDescriptionModal = styled(Modal.Description)`   
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 1.25rem 1.5rem;
-
-    &.text {
-        display: block;
-    }
-`
-
-const StyledContentModal = styled(Modal.Content)`
-    display: flex !important;
-    justify-content: center;
-
-    &.list {
-        padding: 3rem 10rem !important;
-    }
-`
-
-const StyledItemGroup = styled(Item.Group)`
-    padding: 1.25rem 1.5rem;
-`
-
-const StyledListImageWrapper = styled.div`
-    height: 80px;
-    align-items: center;
-    display: flex;
-`
-
-const StyledListImage = styled(Image)`
-    margin-right: auto !important;
-    margin-left: auto !important;
-    display: block !important;    
-`
-
-const StyledHeader = styled(Header)`
-    text-align: center
-`
+import { 
+        StyledModal, 
+        StyledContentModal, 
+        StyledDescriptionModal, 
+        StyledItemGroup, 
+        StyledListImageWrapper, 
+        StyledListImage, 
+        StyledHeader} from "./styles"
 
 export function RegisterModal() {
     return (
@@ -72,12 +30,12 @@ export function RegisterModal() {
                 Your data is stored nowhere, and everywhere: that's the blockchain magic.
                 To continue, just install one of these wallets. That's right, no more passwords!
                 <br /><br />
-                Visit the <a href="/about" target="_blank">about</a> page to know more about
+                Visit the <a href="/about" target="_blank" rel="noopener noreferrer">about</a> page to know more about
                 this bright new technology
             </StyledDescriptionModal>
             <StyledContentModal className="list" image>
                 <List celled link>
-                    <List.Item as="a" href="https://www.getwombat.io/" target="_blank">
+                    <List.Item as="a" href="https://www.getwombat.io/" target="_blank" rel="noopener noreferrer">
                         <StyledListImageWrapper>
                             <StyledListImage size="small" src={require("../../images/wombat.png")} />
                         </StyledListImageWrapper>
@@ -87,7 +45,7 @@ export function RegisterModal() {
                             just install and follow the instructions
                         </List.Content>
                     </List.Item>
-                    <List.Item as="a" href="http://get-scatter.com" target="_blank">
+                    <List.Item as="a" href="http://get-scatter.com" target="_blank" rel="noopener noreferrer">
                         <StyledListImageWrapper>
                             <StyledListImage size="small"  src={require("../../images/scatter.png")} />
                         </StyledListImageWrapper>
@@ -110,14 +68,19 @@ export function ProfileModal({logout, children}) {
     const account = useRecoilValue(ualAtom)
     const [accName, setAccName] = useState("");
 
-    async function asyncGetAccName() {
+    // async function asyncGetAccName() {
+    //     const name = await account.activeUser.getAccountName()
+    //     setAccName(name)
+    // }
+
+    const asyncGetAccName = useCallback(async () => {
         const name = await account.activeUser.getAccountName()
         setAccName(name)
-    }
+    }, [account.activeUser])
 
     useEffect(() => {
         asyncGetAccName()
-    }, [account])
+    }, [account, asyncGetAccName])
 
 
     function resetAndShow() {
@@ -163,6 +126,8 @@ function ProfileHomeScreen({accountName, setActiveModal, close}) {
                         </Card.Header>
                         <Card.Description>
                             <StyledItemGroup>
+                                {deadline &&
+                                <>
                                 <Item.Image src={require("../../images/fountain-pen.png")} />
                                 <Item>
                                     <Item.Content>
@@ -170,6 +135,8 @@ function ProfileHomeScreen({accountName, setActiveModal, close}) {
                                         <Item.Description>{deadline}</Item.Description>
                                     </Item.Content>
                                 </Item>
+                                </>
+                                }
                             </StyledItemGroup>
                         </Card.Description>
                     </Card.Content>

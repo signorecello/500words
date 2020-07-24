@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
+import { useEffect, useCallback } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { profileAtom, stateAtom } from "../atoms/state.js"
 import { ualAtom } from "../atoms/ual"
 
 
 export function CheckForUser() {
     const setProfile = useSetRecoilState(profileAtom)
-    const [state, setState] = useRecoilState(stateAtom)
+    const setState = useSetRecoilState(stateAtom)
     const ual = useRecoilValue(ualAtom)
 
-    async function update() {
+    const update = useCallback(async () => {
         if (ual && ual.activeUser) {
             const accName = await ual.activeUser.getAccountName();
             ual.activeUser.rpc.get_table_rows({
@@ -28,20 +28,19 @@ export function CheckForUser() {
                     table: 'profile',        // Table name
                     limit: 10,               // Maximum number of rows that we want to get
                 })
-                console.log(userData)
                 setProfile(userData)
                 return {state, userData}
             })
         }
-    }
+    }, [setProfile, setState, ual])
 
     useEffect(() => {
         update();
-    }, [])
+    }, [update])
 
     useEffect(() => {
         update();
-    }, [ual])
+    }, [ual, update])
 
     return null;
 }

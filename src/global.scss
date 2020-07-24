@@ -6,3 +6,36 @@
     @extend .flex;
     justify-content: center !important;
 }
+
+.text-align-center {
+    text-align: center;
+}
+
+.row {
+    @extend .flex;
+    flex: 0 0 100%;
+}
+
+.mt {
+    &-none {margin-top: 0 !important;}
+    &-mini {margin-top: 8px;}
+    &-tiny {margin-top: 16px;}
+}
+
+.mr {
+    &-mini {margin-right: 8px;}
+    &-tiny {margin-right: 16px;}
+}
+
+#top_nav {
+    display: flex;
+}
+
+#side_nav, #hamburguer_menu {
+    display: none;
+}
+
+@media only screen and (max-width: 576px) {
+    #top_nav { display: none }
+    #side_nav, #hamburguer_menu { display: flex }
+}

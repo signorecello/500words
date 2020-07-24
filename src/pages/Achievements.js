@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-import { List, Container, Image, Card, Button, Grid } from "semantic-ui-react";
+import { List, Container, Image, Card, Grid } from "semantic-ui-react";
 import { existingChallenges, achievementSelector } from "../atoms/state.js"
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { CheckForUser } from "../utils/hooks"
 import { images, details } from "../copies/challenges"
 
@@ -23,7 +23,6 @@ export default function Achievements(props) {
     const achievements = useRecoilValue(achievementSelector)
 
     const [active, setActive] = useState(null)
-    const [refreshKey, setRefreshKey] = useState(Math.random())
 
     // when we have the user's challenges available, set active the first of those
     useEffect(() => {
@@ -36,13 +35,12 @@ export default function Achievements(props) {
     // and you have an active item to show
     if (existingChals && active) {
         return (
-            <Container key={refreshKey}>
-                <Grid>
-                    <CheckForUser />
+            <Container>
+                <Grid stackable className="mt-none">
                     <Grid.Row>
                         <h1>Challenges</h1>
                     </Grid.Row>
-                    <Grid.Column width={8} style={{marginTop: "1rem"}}>
+                    <Grid.Column width={8}>
                         <List relaxed divided>
                             {existingChals.map((element) => {
                                 return (
@@ -63,7 +61,7 @@ export default function Achievements(props) {
                         </List>
                     </Grid.Column>
         
-                    <Grid.Column width={8} style={{marginTop: "1rem"}}>
+                    <Grid.Column width={8}>
                         {<Card fluid>
                             <Image src={images[active].card} />
                             <Card.Content>
@@ -83,7 +81,7 @@ export default function Achievements(props) {
         )
     } else {
         return(
-            <Container key={refreshKey}>
+            <Container>
                 <CheckForUser/>
                     Loading...
             </Container>

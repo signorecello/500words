@@ -1,8 +1,5 @@
 import React, {useState} from "react";
-import Layout from "../components/layout";
-import { Container, Grid, Image, Accordion, Icon } from "semantic-ui-react";
-
-const typewriter = require("../images/typewriter-sized.jpg");
+import { Container, Grid, Accordion, Icon } from "semantic-ui-react";
 
 function About() {
     const [active, setActive] = useState(0)
@@ -48,11 +45,11 @@ function About() {
                                 You can think of this as a sort of portfolio. I did a lot of work for QUDO so I wanted to show how powerful
                                 blockchain can be even for small projects like this one.
                                 <br /><br />
-                                This was built using <a href="http://reactjs.org" target="_blank">React</a> and 
-                                <a href="http://semantic-ui.com" target="_blank"> Semantic UI</a>. I also tried the new experimental library 
-                                <a href="http://recoiljs.org" target="_blank"> Recoil</a> from Facebook as a state manager. As for the blockchain component, 
-                                I'm using the <a href="http://get-scatter.com" target="_blank">Scatter</a> protocol to interact with the
-                                <a href="http://telos.net" target="_blank"> Telos</a> blockchain, powered by the <a href="http://eos.io" target="_blank">EOS.IO</a>
+                                This was built using <a href="http://reactjs.org" target="_blank" rel="noopener noreferrer">React</a> and 
+                                <a href="http://semantic-ui.com" target="_blank" rel="noopener noreferrer"> Semantic UI</a>. I also tried the new experimental library 
+                                <a href="http://recoiljs.org" target="_blank" rel="noopener noreferrer"> Recoil</a> from Facebook as a state manager. As for the blockchain component, 
+                                I'm using the <a href="http://get-scatter.com" target="_blank" rel="noopener noreferrer">Scatter</a> protocol to interact with the
+                                <a href="http://telos.net" target="_blank" rel="noopener noreferrer"> Telos</a> blockchain, powered by the <a href="http://eos.io" target="_blank" rel="noopener noreferrer">EOS.IO</a>
                                 protocol. 
                             </Accordion.Content>
 

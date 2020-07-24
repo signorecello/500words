@@ -22,6 +22,7 @@ ACTION words::open(name user, const std::string timezone, uint64_t deadline)
     if (it == user_profile.end()) {
         user_profile.emplace(get_self(), [&](auto &p) {
             p.points = 0;
+            p.last_post = eosio::current_time_point().sec_since_epoch();
             p.next_post_until = deadline + SUBMISSION_INTERVAL_SECS;
             p.timezone = timezone;
         });
@@ -57,6 +58,11 @@ ACTION words::post(name user, std::string hash, uint64_t wordcount, short max_pa
     writer(user, type);
     artist(user, type);
     
+    eosio::check(profile.last_post + MIN_SUBMISSION_INTERVAL_SECS < eosio::current_time_point().sec_since_epoch(), "Whoa there! You're posting too frequently!");
+
+    user_profile.modify(profile, get_self(), [&](auto &p) {
+        p.last_post = eosio::current_time_point().sec_since_epoch();
+    });
 
     auto new_next_post_until = profile.next_post_until;
     while (new_next_post_until < eosio::current_time_point().sec_since_epoch()) {
@@ -65,15 +71,13 @@ ACTION words::post(name user, std::string hash, uint64_t wordcount, short max_pa
     
     
     if (profile.next_post_until > eosio::current_time_point().sec_since_epoch()) {
+
         // deadline is further than the current time
         // if it is further than just 1 submission interval secs, increase the deadline
 
         // so the deadline (which is greater than the current time) minus the current time is smaller
         // than the submission interval
-        print((profile.next_post_until - eosio::current_time_point().sec_since_epoch()));
         if ((profile.next_post_until - eosio::current_time_point().sec_since_epoch()) < SUBMISSION_INTERVAL_SECS) {
-            print("increasing");
-
             longest(user, true);
             user_profile.modify(profile, get_self(), [&](auto &p) {
                 p.points += 10;
@@ -86,25 +90,6 @@ ACTION words::post(name user, std::string hash, uint64_t wordcount, short max_pa
             p.next_post_until = new_next_post_until + SUBMISSION_INTERVAL_SECS;
         });
     }
-
-    // if (eosio::current_time_point().sec_since_epoch() < profile.next_post_until) {
-    //     print("first");
-    //     if (new_next_post_until < profile.next_post_until) {
-    //         print("inner first");
-    //         longest(user, profile.next_post_until);
-    //         // he still always wins some points just for submitting
-    //         user_profile.modify(profile, get_self(), [&](auto &p) {
-    //             p.points += 10;
-    //             p.next_post_until = new_next_post_until + SUBMISSION_INTERVAL_SECS;
-    //         });
-    //     }
-    // } else {
-    //     print("second");
-    //     user_profile.modify(profile, get_self(), [&](auto &p) {
-    //         p.next_post_until = new_next_post_until;
-    //     });
-    // }
-    
 
 }
 

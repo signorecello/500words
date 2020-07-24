@@ -37,7 +37,7 @@ export const details = {
     },
     writer: {
         name: "Writer",
-        description: "Seems like you\'ve become a writer! Write your first text submission and win this little achievement"
+        description: "Seems like you've become a writer! Write your first text submission and win this little achievement"
     },
     artist: {
         name: "Artist",

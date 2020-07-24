@@ -7,6 +7,7 @@
 #include <eosio/print.hpp>
 
 #define SUBMISSION_INTERVAL_SECS 86400
+#define MIN_SUBMISSION_INTERVAL_SECS 60
 #define LONGEST "longest"
 #define LONGEST_ACHIEVEMENT_VALUE 30
 
@@ -70,6 +71,7 @@ CONTRACT words : public contract
     {
         uint64_t points;
         uint32_t next_post_until;
+        uint32_t last_post;
         std::string timezone;
         std::set<std::string> achievements;
 

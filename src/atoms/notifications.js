@@ -1,11 +1,4 @@
-import { atom, selector } from "recoil";
-import moment from "moment-timezone";
-
-// export const challengesAtom = atom({
-//     key: "challenges",
-//     default: []
-// })
-
+import { atom } from "recoil";
 export const notificationsAtom = atom({
     key: "notificationsAtom",
     default: null

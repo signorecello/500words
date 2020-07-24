@@ -24,7 +24,7 @@ export function sendTimezone({account, tz, deadline}) {
     }
 }
 
-export function write({accname, wordCount, maxPause, totalTime, text}) {
+export function write({name, wordCount, maxPause, totalTime, text}) {
     return {
         actions: [
             {
@@ -32,12 +32,12 @@ export function write({accname, wordCount, maxPause, totalTime, text}) {
                 name: "open",
                 authorization: [
                     {
-                        actor: accname,
+                        actor: name,
                         permission: "active",
                     },
                 ],
                 data: {
-                    user: accname,
+                    user: name,
                     timezone: moment.tz.guess(),
                     deadline: moment.tz({hour: 23, minute: 59, second: 59, millisecond: 0}, moment.tz.guess()).unix()
                 },
@@ -47,12 +47,12 @@ export function write({accname, wordCount, maxPause, totalTime, text}) {
                 name: "post",
                 authorization: [
                     {
-                        actor: accname,
+                        actor: name,
                         permission: "active",
                     },
                 ],
                 data: {
-                    user: accname,
+                    user: name,
                     hash: murmur.murmur3(text, "500words!"),
                     wordcount: wordCount,
                     max_pause: maxPause,

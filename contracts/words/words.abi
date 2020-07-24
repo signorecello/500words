@@ -124,6 +124,10 @@
                     "type": "uint32"
                 },
                 {
+                    "name": "last_post",
+                    "type": "uint32"
+                },
+                {
                     "name": "timezone",
                     "type": "string"
                 },
