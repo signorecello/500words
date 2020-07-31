@@ -29,3 +29,7 @@ yarn-error.log*
 .firebaserc
 database.rules.json
 firebase.json
+
+#eosio
+words.abi
+words.wasm

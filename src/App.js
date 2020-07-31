@@ -6,8 +6,7 @@ import moment from "moment";
 import { notificationsAtom } from "./atoms/notifications";
 import { useSetRecoilState } from "recoil";
 const HyperionSocketClient = require('@eosrio/hyperion-stream-client').default;
-const client = new HyperionSocketClient(process.env.REACT_APP_TLOS_HTTP_ENDPOINT, {async: true});
-
+const client = new HyperionSocketClient(process.env[`REACT_APP_TLOS_HTTP_ENDPOINT${process.env.REACT_APP_ENVIRONMENT}`], {async: true});
 
 export default function App(props) {
 	const setTransactions = useSetRecoilState(transactionsAtom)
@@ -17,9 +16,9 @@ export default function App(props) {
 	useEffect(() => {	
 		client.onConnect = () => {
 			client.streamActions({
-				contract: process.env.REACT_APP_CONTRACT,
+				contract: process.env[`REACT_APP_CONTRACT${process.env.REACT_APP_ENVIRONMENT}`],
 				action: '',
-				account: process.env.REACT_APP_CONTRACT,
+				account: process.env[`REACT_APP_CONTRACT${process.env.REACT_APP_ENVIRONMENT}`],
 				start_from: moment().subtract(process.env.REACT_APP_STREAM_FROM_INTERVAL_DAYS, "day").format(),
 				read_until: 0,
 				filters: [],

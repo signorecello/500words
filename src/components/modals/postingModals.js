@@ -17,6 +17,14 @@ const StyledSendButton = styled(Button)`
     flex: 0 0 20%;
 `
 
+const StyledDownloadAnchor = styled.a`
+    flex: 0 0 40%;
+`
+
+const StyledDownloadButton = styled(Button)`
+    width: 100%;
+`
+
 const StyledFBShareButton = styled(ShareButton)`
     flex: 0 0 40%;
     height: 40px;
@@ -27,14 +35,9 @@ const StyledFBShareButton = styled(ShareButton)`
     cursor: pointer;
 `
 
-export function AfterPostModal({show, accName, text}) {
-    const [modalOpen, setModalOpen] = useState(show)
+function AfterWritingModal({accName, text}) {
     const [email, setEmail] = useState("")
     const [success, setSuccess] = useState(null)
-
-    useEffect(() => {
-        console.log(email)
-    }, [email])
 
     function sendEmail() {
         emailjs.send(
@@ -48,6 +51,7 @@ export function AfterPostModal({show, accName, text}) {
             setSuccess(false)
         });
     }
+
 
     function message() {
         if (success === true) {
@@ -72,6 +76,75 @@ export function AfterPostModal({show, accName, text}) {
     }
 
     return (
+        <>
+        <StyledDescriptionModal className="text">
+            Do you want me to send a copy of your work to your e-mail?
+            Remember that I don't store <b>anything</b> about you. I don't
+            even have a server to talk to!
+        </StyledDescriptionModal>
+        <StyledContentModal className="wrap">
+            {message()}
+            <div className="row justify-content-center mt-tiny">
+                <StyledFBShareButton href={process.env.REACT_APP_APP_URL} hashtag="#500words">
+                    <Image src={require("../../images/fb-logo.png")} avatar className="mr-mini"/>
+                    Share
+                </StyledFBShareButton>
+            </div>
+        </StyledContentModal>
+        </>
+    )
+}
+
+function AfterPhotoModal({photo}) {
+    const [success, setSuccess] = useState(null)
+
+    function message() {
+        if (success === true) {
+            return (
+                <StyledHeader>See you tomorrow!</StyledHeader>
+            )
+        } else if (success === false) {
+            return (
+                <>
+                    <StyledHeader>Oh nuts... Something went wrong.</StyledHeader>
+                    Dont' worry, your submission is secured on the blockchain!
+                </>
+            )
+        } else {
+            return (
+                <div className="row justify-content-center">
+                    <StyledDownloadAnchor href={photo} download="photo">
+                        <StyledDownloadButton >Download!</StyledDownloadButton>
+                    </StyledDownloadAnchor>
+                </div>
+            )
+        }
+    }
+
+    return (
+        <>
+        <StyledDescriptionModal className="text">
+            Unfortunately I can't send your amazing photo by e-mail.
+            But remember, the photo is solely yours, so you can download
+            it here
+        </StyledDescriptionModal>
+        <StyledContentModal className="wrap">
+            {message()}
+            <div className="row justify-content-center mt-tiny">
+                <StyledFBShareButton href={process.env.REACT_APP_APP_URL} hashtag="#500words">
+                    <Image src={require("../../images/fb-logo.png")} avatar className="mr-mini"/>
+                    Share
+                </StyledFBShareButton>
+            </div>
+        </StyledContentModal>
+        </>
+    )
+}
+
+export function AfterPostModal({show, accName, text, photo, type}) {
+    const [modalOpen, setModalOpen] = useState(show)
+
+    return (
         <StyledModal
             open={modalOpen}
             onClose={() => setModalOpen(false)}
@@ -80,21 +153,9 @@ export function AfterPostModal({show, accName, text}) {
                 <Modal.Header>
                     Great job!
                 </Modal.Header>
-                
-                <StyledDescriptionModal className="text">
-                    Do you want me to send a copy of your work to your e-mail?
-                    Remember that I don't store <b>anything</b> about you. I don't
-                    even have a server to talk to!
-                </StyledDescriptionModal>
-                <StyledContentModal className="wrap">
-                    {message()}
-                    <div className="row justify-content-center mt-tiny">
-                        <StyledFBShareButton href={process.env.REACT_APP_APP_URL} hashtag="#500words">
-                            <Image src={require("../../images/fb-logo.png")} avatar className="mr-mini"/>
-                            Share
-                        </StyledFBShareButton>
-                    </div>
-                </StyledContentModal>
+                {type === "text" 
+                ? <AfterWritingModal accName={accName} text={text} /> 
+                : <AfterPhotoModal accName={accName} photo={photo} />}
             </>
         </StyledModal>
     )

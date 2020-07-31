@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Button, Dropdown, Image, Modal, Item, Card, List } from "semantic-ui-react";
 import { useRecoilValue } from "recoil";
 import { ualAtom } from "../../atoms/ual.js"
-import { timezoneSelector, deadlineSelector } from "../../atoms/state"
+import { timezoneSelector, deadlineSelector, lastPostSelector } from "../../atoms/state"
 import moment from "moment-timezone";
 import { sendTimezone } from "../../utils/transactions"
 import { getAvatar } from "../../utils/avatars.js";
@@ -15,6 +15,8 @@ import {
         StyledListImageWrapper, 
         StyledListImage, 
         StyledHeader} from "./styles"
+
+import { StatisticsComp } from "../statistics"
 
 export function RegisterModal() {
     return (
@@ -109,8 +111,8 @@ export function ProfileModal({logout, children}) {
 
 function ProfileHomeScreen({accountName, setActiveModal, close}) {
     const logout = () => {};
-    const deadline = useRecoilValue(deadlineSelector)
     // const account = useRecoilValue(scatterAccountAtom)
+    const lastPost = useRecoilValue(lastPostSelector)
 
     return (
         <>
@@ -120,25 +122,18 @@ function ProfileHomeScreen({accountName, setActiveModal, close}) {
             <StyledDescriptionModal>
                 <Card>
                     <Image src={`https://semantic-ui.com/images/avatar/large/${getAvatar(accountName)}.jpg`} />
+                    
                     <Card.Content>
-                        <Card.Header className="justify-content-center">
+                        <Card.Header>
                             {accountName}
                         </Card.Header>
+                        <Card.Meta>
+                            last post {lastPost}
+                        </Card.Meta>
                         <Card.Description>
-                            <StyledItemGroup>
-                                {deadline &&
-                                <>
-                                <Item.Image src={require("../../images/fountain-pen.png")} />
-                                <Item>
-                                    <Item.Content>
-                                        <Item.Header>Post until</Item.Header>
-                                        <Item.Description>{deadline}</Item.Description>
-                                    </Item.Content>
-                                </Item>
-                                </>
-                                }
-                            </StyledItemGroup>
+                            <StatisticsComp />
                         </Card.Description>
+
                     </Card.Content>
                 </Card>
                 
@@ -179,7 +174,7 @@ function ChangeTz({close}) {
 
 
     function sendEosTransaction() {
-        const deadline = moment.tz({hour: 23, minute: 59, second: 59}, tz).subtract(process.env.REACT_APP_SUBMISSION_INTERVAL_DAYS, "days").unix()
+        const deadline = moment.tz({hour: 23, minute: 59, second: 59}, tz).subtract(process.env[`REACT_APP_SUBMISSION_INTERVAL_SECS${process.env.REACT_APP_ENVIRONMENT}`], "days").unix()
         const transaction = sendTimezone({account, tz, deadline})
         account.signTransaction(transaction, { blocksBehind: 3, expireSeconds: 30 })
         .then((result) => {
@@ -244,7 +239,7 @@ function TzSet({close, setChangingTz}) {
                 <StyledDescriptionModal>
                     Oh, seems like you haven't set your timezone.
                     <br/><br/>
-                    This means that you have to submit until {deadline} every day.
+                    This means that you have to submit until {moment(deadline, "X").format("dddd, MMMM Do YYYY, H:mm:ss")} every day.
                     <br/><br/>
                     Do you want to set your timezone so it matches your midnight?
                 </StyledDescriptionModal>

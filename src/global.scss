@@ -7,6 +7,10 @@
     justify-content: center !important;
 }
 
+.w {
+    &-100 {width: 100%}
+}
+
 .text-align-center {
     text-align: center;
 }
@@ -38,4 +42,9 @@
 @media only screen and (max-width: 576px) {
     #top_nav { display: none }
     #side_nav, #hamburguer_menu { display: flex }
+}
+
+.react-html5-camera-photo>video {
+    // width: auto;
+    // height: 88vh;
 }

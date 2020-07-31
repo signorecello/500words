@@ -6,18 +6,8 @@
 #include <set>
 #include <eosio/print.hpp>
 
-#define SUBMISSION_INTERVAL_SECS 86400
-#define MIN_SUBMISSION_INTERVAL_SECS 60
-#define LONGEST "longest"
-#define LONGEST_ACHIEVEMENT_VALUE 30
-
-#define NOBREATH "nobreath"
-#define MAX_PAUSE_LIMIT_SECS 5
-#define NO_BREATH_ACHIEVEMENT_VALUE 7
-
-#define SPEEDY "speedy"
-#define TOTAL_TIME_LIMIT_SECS 10
-#define SPEEDY_ACHIEVEMENT_VALUE 20
+#define SUBMISSION_INTERVAL_SECS 300
+#define MIN_SUBMISSION_INTERVAL_SECS 20
 
 #define WRITER "writer"
 #define WRITE_TYPE "text"
@@ -25,26 +15,44 @@
 #define ARTIST "artist"
 #define DRAW_TYPE "draw"
 
-#define HOUR 3600
+#define PHOTOGRAPHER "photographer"
+#define PHOTO_TYPE "photo"
+
+// // ACHIEVEMENT CONSTANTS for DEV
+// #define LONGEST "longest"
+// #define LONGEST_ACHIEVEMENT_VALUE 3
+
+// #define NOBREATH "nobreath"
+// #define MAX_PAUSE_LIMIT_SECS 10
+// #define NO_BREATH_STREAK 3
+
+// #define SPEEDY "speedy"
+// #define SPEEDY_MAX_TIME 600
+// #define SPEEDY_STREAK 3
+
+// #define THINKER "thinker"
+// #define THINKER_STREAK 3
+// #define THINKER_MIN_TIME 2
+
+
+// ACHIEVEMENT CONSTANTS for PROD
+#define LONGEST "longest"
+#define LONGEST_ACHIEVEMENT_VALUE 30
+
+#define NOBREATH "nobreath"
+#define MAX_PAUSE_LIMIT_SECS 10
+#define NO_BREATH_STREAK 7
+
+#define SPEEDY "speedy"
+#define SPEEDY_MAX_TIME 600
+#define SPEEDY_STREAK 7
+
+#define THINKER "thinker"
+#define THINKER_STREAK 7
+#define THINKER_MIN_TIME 1800
+
 
 using namespace eosio;
-
-
-    // enum timez : uint64_t {
-    //   min1200 = -HOUR * 12, min1100 = -HOUR * 11, min1000 = -HOUR * 10, min0930 = (-HOUR * 9) - (HOUR / 2), 
-    //   min0900 = -HOUR * 9, min0800 = -HOUR * 8, min0700 = -HOUR * 7, min0600 = -HOUR * 6, 
-    //   min0500 = -HOUR * 5, min0400 = -HOUR * 4, min0330 = (-HOUR * 3) - (HOUR / 2),
-    //   min0300 = -HOUR * 3, min0200 = -HOUR * 2, min0100 = -HOUR,
-    //   utc = 0,
-    //   plus0100 = HOUR, plus0200 = HOUR * 2, plus0300 = HOUR * 3, plus0330 = (HOUR * 3) + (HOUR / 2), 
-    //   plus0400 = HOUR * 4, plus0430 = (HOUR * 4) + (HOUR / 2), plus0500 = HOUR * 5, 
-    //   plus0530 = (HOUR * 5) + (HOUR / 2), plus0545 = (HOUR * 5) + ((HOUR / 4) * 3), plus0600 = HOUR * 6, 
-    //   plus0630 = (HOUR * 6) + (HOUR / 2), plus0700 = (HOUR * 7), plus0800 = (HOUR * 8), 
-    //   plus0845 = (HOUR * 8) + ((HOUR / 4) * 3), plus0900 = (HOUR * 9), plus0930 = (HOUR * 9) + (HOUR / 2), 
-    //   plus1000 = HOUR * 10, plus1030 = (HOUR * 10) + (HOUR / 2), plus1100 = HOUR * 11, plus1200 = HOUR * 12, 
-    //   plus1245 = (HOUR * 12) + ((HOUR / 4) * 3), plus1300 = HOUR * 13, plus1400 = HOUR * 14
-      
-    // };
 
 CONTRACT words : public contract
 {
@@ -54,14 +62,20 @@ CONTRACT words : public contract
     ACTION close(name user);
     ACTION open(name user, const std::string timezone, uint64_t deadline);
     ACTION change(name user, const std::string timezone, uint64_t past_deadline);
-    ACTION post(name user, std::string hash, uint64_t wordcount, short max_pause, uint64_t total_time, const std::string type);
+    ACTION posttext(name user, const std::string hash, uint64_t wordcount, short max_pause, uint64_t total_time, const std::string type);
+    ACTION postdrawing(name user, const std::string hash, const std::string type);
+    ACTION postphoto(name user, const std::string hash, const std::string type);
     ACTION newach(const std::string achievement, name user);
     ACTION remach(const std::string achievement, name user);
+    bool valsub(name user);
+
     void longest(name user, bool valid);
     void nobreath(name user, short max_pause);
-    void speedy(name user, uint64_t total_time);
+    void speedy(name user, uint64_t total_time_secs);
+    void thinker(name user, uint64_t total_time_secs);
     void writer(name user, const std::string type);
     void artist(name user, const std::string type);
+    void photographer(name user, const std::string type);
 
   private:
 
@@ -90,17 +104,8 @@ CONTRACT words : public contract
         uint64_t primary_key() const { return challenge.value; }
     };
 
-
-    TABLE state_table
-    {
-      std::set<std::string> existing_challenges = {"longest", "speedy", "nobreath", "writer", "artist"};
-
-      uint64_t primary_key() const { return 0; }
-    };
-
-    typedef eosio::multi_index<"state"_n, state_table> state;
     typedef eosio::multi_index<"profile"_n, profile_table> profile;
     typedef eosio::multi_index<"challenges"_n, challenges_table> challenges;
 };
 
-EOSIO_DISPATCH(words, (close)(open)(change)(post)(newach)(remach))
+EOSIO_DISPATCH(words, (close)(open)(change)(posttext)(postphoto)(postdrawing)(newach)(remach))

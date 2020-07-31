@@ -9,6 +9,7 @@ import Landing from "../pages/Landing";
 import About from "../pages/About";
 import Achievements from "../pages/Achievements";
 import Writing from "../pages/Writing"
+import Photo from "../pages/Photo"
 
 export default function Layout(props) {
 	const notification = useRecoilValue(notificationsAtom)
@@ -31,6 +32,8 @@ export default function Layout(props) {
 			? <Writing />
 			: activePage === "achievements"
 			? <Achievements />
+			: activePage === "capture"
+			? <Photo />
 			: <div>Loading...</div>
 			}
 			{/* {props.children} */}

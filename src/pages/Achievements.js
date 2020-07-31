@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import { List, Container, Image, Card, Grid } from "semantic-ui-react";
-import { existingChallenges, achievementSelector } from "../atoms/state.js"
+import { achievementSelector } from "../atoms/state.js"
 import { useRecoilValue } from "recoil";
 import { CheckForUser } from "../utils/hooks"
-import { images, details } from "../copies/challenges"
+import { challenges } from "../challenges"
 
 const achievement = require("../images/icn-trophy-bronze.png")
 
@@ -19,73 +19,54 @@ const inactiveStyle = {
 }
 
 export default function Achievements(props) {
-    const existingChals = useRecoilValue(existingChallenges)
     const achievements = useRecoilValue(achievementSelector)
 
-    const [active, setActive] = useState(null)
+    const [active, setActive] = useState(challenges[0])
 
-    // when we have the user's challenges available, set active the first of those
-    useEffect(() => {
-        if (existingChals) {
-            setActive(existingChals[0])
-        }
-    }, [existingChals])
+    return (
+        <Container>
+            <Grid stackable className="mt-none">
+                <Grid.Row>
+                    <h1>Challenges</h1>
+                </Grid.Row>
+                <Grid.Column width={8}>
+                    <List relaxed divided>
+                        {challenges.map((element) => {
+                            return (
+                                <List.Item 
+                                    key={element.name}
+                                    style={active.name === element.name ? activeStyle : inactiveStyle} 
+                                    onClick={() => setActive(element)}>
+                                    <Image avatar src={element.thumbnail} />
+                                    <List.Content>
+                                        <List.Header>{element.name}</List.Header>
+                                    </List.Content>
+                                    {achievements && achievements.find((ach) => ach === element.alias) &&
+                                        <Image src={achievement} floated="right"/>
+                                    }
+                                </List.Item>
+                            )
+                        })}
+                    </List>
+                </Grid.Column>
     
-    // render the component only when you have the existing challenges, 
-    // and you have an active item to show
-    if (existingChals && active) {
-        return (
-            <Container>
-                <Grid stackable className="mt-none">
-                    <Grid.Row>
-                        <h1>Challenges</h1>
-                    </Grid.Row>
-                    <Grid.Column width={8}>
-                        <List relaxed divided>
-                            {existingChals.map((element) => {
-                                return (
-                                    <List.Item 
-                                        key={element}
-                                        style={active === element ? activeStyle : inactiveStyle} 
-                                        onClick={() => setActive(element)}>
-                                        {images[element] && <Image avatar src={images[element].thumbnail} />}
-                                        <List.Content>
-                                            <List.Header>{details[element].name}</List.Header>
-                                        </List.Content>
-                                        {achievements && achievements.find((ach) => ach === element) &&
-                                            <Image src={achievement} floated="right"/>
-                                        }
-                                    </List.Item>
-                                )
-                            })}
-                        </List>
-                    </Grid.Column>
-        
-                    <Grid.Column width={8}>
-                        {<Card fluid>
-                            <Image src={images[active].card} />
-                            <Card.Content>
-                                <Card.Header>
-                                    {details[active].name}
-                                </Card.Header>
-                                <Card.Description>
-                                    {details[active].description}
-                                </Card.Description>
-                            </Card.Content>
-                        </Card>
-                        }
-                
-                    </Grid.Column>
-                </Grid>
-            </Container>
-        )
-    } else {
-        return(
-            <Container>
-                <CheckForUser/>
-                    Loading...
-            </Container>
-        )
-    }
+                <Grid.Column width={8}>
+                    {<Card fluid>
+                        <Image src={active.card} />
+                        <Card.Content>
+                            <Card.Header>
+                                {active.name}
+                            </Card.Header>
+                            <Card.Description>
+                                {active.description}
+                            </Card.Description>
+                        </Card.Content>
+                    </Card>
+                    }
+            
+                </Grid.Column>
+            </Grid>
+        </Container>
+    )
     
 }
