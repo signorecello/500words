@@ -22,7 +22,7 @@ export default function Writing(props) {
     
     const [success, setSuccess] = useState(false)
     const [failure, setFailure] = useState(false)
-
+    
     function photo(data, method) {
         setIsCapturing(false)
         setIsUploading(false)
@@ -86,10 +86,10 @@ export default function Writing(props) {
                     }}>Retry</Button>}
 
                     {!photoData && <>
-                    <Button onClick={() => setIsCapturing(true)}>
+                    <Button onClick={() => {setIsCapturing(true); setIsUploading(false)}}>
                         Capture
                     </Button>
-                    <Button onClick={() => setIsUploading(true)}>
+                    <Button onClick={() => {setIsUploading(true); setIsCapturing(false)}}>
                         Upload image
                     </Button> </>}
 
@@ -101,15 +101,17 @@ export default function Writing(props) {
                     <Camera
                         idealFacingMode="environment"
                         // isFullscreen="true"
+                        onCameraError={() => {setIsCapturing(false); setIsUploading(true)}}
                         className="w-100"
                         onTakePhotoAnimationDone={ (dataUri) => photo(dataUri)} />}
                     {isUploading &&
                         <ImageUploader
                             withIcon={true}
-                            buttonText='Choose images'
+                            label="Upload a photo, or take one now!"
+                            buttonText='Go!'
                             onChange={(dataUri) => photo(dataUri[0], "upload")}
-                            imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                            maxFileSize={5242880}
+                            imgExtension={['.jpg', '.gif', '.png']}
+                            maxFileSize={10485760}
                         />
                     }
                     {!isCapturing && !isUploading && photoData &&

@@ -70,11 +70,6 @@ function MenuItem({desktop, ual, logout, login, setActivePage}) {
 			}
 			{ual &&
 				<Menu.Item
-					name="capture"
-					onClick={() => setActivePage("capture")}/>
-			}
-			{ual &&
-				<Menu.Item
 					name="achievements"
 					onClick={() => setActivePage("achievements")}/>
 			}
@@ -125,7 +120,6 @@ function Header(props) {
 			<TopBar id="hamburguer_menu">
 				<StyledHamburguer 
 					icon 
-					id="hamburguer_icon"
 					onClick={() => setSidebar(!sidebar)} 
 					labelPosition='right'
 					style={sidebar ? {display: "none"} : {display: "flex"}}>
