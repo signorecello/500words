@@ -7,7 +7,7 @@
 		"@scatterjs/core": "^2.7.53",
 		"@scatterjs/eosjs2": "^1.5.35",
 		"antd": "^3.13.5",
-		"axios": "^0.19.2",
+		"axios": "^0.21.1",
 		"emailjs-com": "^2.6.3",
 		"eosjs": "^20.0.0",
 		"moment-timezone": "^0.5.31",
